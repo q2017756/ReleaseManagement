@@ -32,13 +32,13 @@ export default defineConfig({
   },
   server: {
     host: '0.0.0.0',
-    port: '3000',
-    proxy: { // 代理配置
-      '/v1/api': {
-        target: 'http://localhost:9200',
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\v1\/api/, '')
-      },
-    },
+    port: '8899',
+    // proxy: { // 代理配置
+    //   '/v1/api': {
+    //     target: 'http://localhost:9200',
+    //     changeOrigin: true,
+    //     rewrite: (path) => path.replace(/^\v1\/api/, '')
+    //   },
+    // },
   }
 })

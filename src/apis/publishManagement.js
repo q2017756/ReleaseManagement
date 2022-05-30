@@ -21,3 +21,12 @@ export const deployPublish = (params) => {
     data: params
   })
 }
+
+// ssh连接情况
+export const testGitSSH = (params) => {
+  return httpRequest({
+    method: 'POST',
+    url: '/v1/api/testGitSSH',
+    data: params
+  })
+}

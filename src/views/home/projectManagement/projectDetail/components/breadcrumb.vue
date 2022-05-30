@@ -1,6 +1,5 @@
 <script setup>
 import { ArrowRight } from '@element-plus/icons-vue'
-import { defineProps } from 'vue'
 
 const props = defineProps({
   breadcrumbList: {
