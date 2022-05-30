@@ -2,7 +2,7 @@ import axios from "axios";
 
 // 创建一个 axios 实例
 const service = axios.create({
-  // baseURL: 'http://localhost:9200', // 所有请求地址的前缀部分
+  baseURL: 'http://localhost:9200', // 所有请求地址的前缀部分
   timeout: 600000, // 请求超时毫秒
   // withCredentials: true, // 异步请求携带cookie
 })
