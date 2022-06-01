@@ -1,6 +1,6 @@
 <script setup>
   import { ref } from 'vue'
-  console.log(1)
+  console.log(12)
   // debugger
   const props = defineProps({
     // tableHead: {
