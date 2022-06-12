@@ -1,11 +1,8 @@
 <script setup>
-  import { ref } from 'vue'
+  import { reactive, ref } from 'vue'
+  import { getPublishInfo } from '@/apis/publishManagement.js'
   // debugger
   const props = defineProps({
-    // tableHead: {
-    //   type: Array,
-    //   default: () => []
-    // },
     tableData: {
       type: Array,
       default: () => []
@@ -25,6 +22,41 @@
       color: 'blue'
     }
   }
+  let dialogVisible = ref(false)
+  let publishDetail = reactive({
+    logs: '111'
+  })
+  let logs = ref('')
+  const handleGetPublishDetail = async (id) => {
+    try {
+      const {
+        status,
+        data: { message, result: res },
+      } = await getPublishInfo({
+        id: id
+      })
+      if (status === 200) {
+        logs.value = res.logs
+        dialogVisible.value = true
+      } else {
+        ElMessage({
+          type: 'error',
+          message: message,
+          showClose: true,
+          center: true,
+          grouping: true,
+        })
+      }
+    } catch (e) {
+      ElMessage({
+        type: 'error',
+        message: e.message || '请求失败',
+        showClose: true,
+        center: true,
+        grouping: true,
+      })
+    }
+  }
 </script>
 
 <template>
@@ -39,22 +71,27 @@
     </el-table-column>
     <el-table-column align="center" sortable  prop="operator" label="操作人" />
 
-    <!-- <el-table-column align="center" label="操作按钮">
-      <template #default="scope">
-        {{scope.row}}
-        <el-button type="info">查看日志详情</el-button>
-      </template>
-    </el-table-column> -->
-
-
-     <!-- 展开内容 -->
-    <el-table-column type="expand" label="展开查看日志" width="120">
+    <el-table-column label="展开查看日志" width="120">
       <template #default="props">
-        <h4>日志如下：</h4>
-        <p v-html="props.row.logs" style="white-space:pre-wrap"></p>
+        <el-button 
+          link type="primary" size="small" 
+          @click="handleGetPublishDetail(props.row.id)"
+        >
+          查看日志
+        </el-button>
       </template>
     </el-table-column>
   </el-table>
+
+  <el-dialog
+    v-model="dialogVisible"
+    title="日志详情"
+    width="80%"
+  >
+    <div style="height: 50vh;overflow-y: scroll;">
+      <p v-html="logs" style="white-space: pre-wrap;"></p>
+    </div>
+  </el-dialog>
 </template>
 
 <style lang="scss" scope>

@@ -13,6 +13,15 @@ export const getPublishList = (params) => {
   })
 }
 
+// 列表查询
+export const getPublishInfo = (params) => {
+  return httpRequest({
+    method: 'POST',
+    url: '/v1/api/getPublishInfo',
+    data: params
+  })
+}
+
 // 部署
 export const deployPublish = (params) => {
   return httpRequest({
