@@ -35,13 +35,17 @@ let form = ref({
   status: '',
   gitProjectName: '',
   nodeEnv: '',
+  buildSrc: 'dist',
   buildFolder: '',
   buildHtml: ''
 })
 const rules = reactive({
   name: [{ required: true, message: 'name为必填项', trigger: 'blur' }],
+  buildSrc: [
+    { required: true, message: 'buildSrc为必填项', trigger: 'blur' },
+  ],
   gitRepository: [
-    { required: true, message: 'gitRepository为必填项', trigger: 'change' },
+    { required: true, message: 'gitRepository为必填项', trigger: 'blur' },
   ],
   gitProjectName: [{ required: true, message: 'gitProjectName为必填项', trigger: 'blur' }],
   desc: [{ required: true, message: 'desc为必填项', trigger: 'blur' }],
@@ -132,7 +136,6 @@ const add = async () => {
 
 // 修改
 const edit = async () => {
-  console.log(22222222222)
   try {
     const {
       status,
@@ -196,7 +199,7 @@ const submitForm = () => {
       :rules="rules"
       ref="formRef"
       class="myForm"
-      label-width="100px"
+      label-width="150px"
       label-position="left"
       :disabled="flag === 'detail'"
     >
@@ -212,7 +215,11 @@ const submitForm = () => {
         <el-input style="width: 300px" clearable v-model="form.gitRepository" />
       </el-form-item>
 
-      <el-form-item label="文件夹名：" prop="gitProjectName">
+      <el-form-item label="打包产物路径（一般为dist）：" prop="buildSrc">
+        <el-input style="width: 300px" clearable v-model="form.buildSrc" />
+      </el-form-item>
+
+      <el-form-item label="test/pre/prod文件路径：" prop="gitProjectName">
         <el-input style="width: 300px" clearable v-model="form.gitProjectName" />
       </el-form-item>
 
@@ -234,10 +241,6 @@ const submitForm = () => {
           <el-option v-for="item in nodeEnum" :key="item" :label="item" :value="item" />
         </el-select>
       </el-form-item>
-
-   
-
-      
 
       <el-form-item label="维护人员" prop="people">
         <el-input clearable v-model="form.people" type="textarea" />

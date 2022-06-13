@@ -10,7 +10,7 @@ const router = useRouter()
 
 const form = reactive({
   name: '',
-  status: '', // 使用、弃用
+  status: 'USE', // 使用、弃用
 })
 
 let tableData = ref([])

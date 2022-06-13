@@ -11,7 +11,7 @@ const breadcrumbList = [
   {path: '/', value: '项目列表'},
 ]
 
-const gitSSH = ref(false)
+const gitSSH = ref(true)
 const search = ref('')
 const tableData = ref([])
 // 获取项目列表
@@ -74,30 +74,31 @@ const handleTestSSH = async () => {
 
 const form = reactive({
   name: '',
+  status: 'USE'
 })
 // 过滤查询
 const onSearch = () => {
   getProjectList(form)
 }
-// onSearch()
+onSearch()
 </script>
 
 <template>
   <div class="projectList">
     <!-- 面包屑 -->
     <breadcrumb :breadcrumb-list="breadcrumbList" />
-    <div class="search">
+    <!-- <div class="search">
       <el-button 
         type="primary"
         @click="handleTestSSH"
       >
         测试vpn连接情况
       </el-button>
-    </div>
+    </div> -->
     <!-- search -->
     <div v-show="gitSSH" class="search">
       <el-input 
-        v-model="search" 
+        v-model="form.name" 
         placeholder="搜索项目名称" 
         :prefix-icon="Search" 
         clearable

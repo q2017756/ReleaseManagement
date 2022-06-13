@@ -1,6 +1,6 @@
 <script setup>
   import {useRoute} from 'vue-router'
-  import {ref, reactive, onMounted, inject} from 'vue'
+  import {ref, reactive, onMounted, computed} from 'vue'
 
   import Breadcrumb from './compontents/breadcrumb.vue'
   import TableCom from './compontents/tableCom.vue'
@@ -11,30 +11,36 @@
   onMounted(() => {
     console.log(route.params.project)
   })
-
+  let publishData = reactive({
+    gitMessage: '',
+    list: []
+  })
+  let projectInfo = ref({
+    name: ''
+  })
   const breadcrumbList = [
     {path: { name: 'publishList' }, value: '发布管理'},
-    {path: '', value: `项目详情 (${route.params.project})`},
+    {path: '', value: `发布详情`},
   ]
 
-  const form = reactive({
+  let form = reactive({
     branchName: 'test',
     envType: 'test'
   })
 
-  
-  const tableData = ref([])
   const getList = async params => {
     try {
       const {
         status,
-        data: { message, result: res },
+        data: { message, result },
       } = await getPublishList({
         ...params,
         projectId: route.params.project
       })
       if (status === 200) {
-        tableData.value = res
+        publishData.list = result.list
+        publishData.gitMessage = result.gitMessage
+        projectInfo.value = result.projectInfo
       } else {
         ElMessage({
           type: 'error',
@@ -101,9 +107,9 @@
   <div class="projectDetail">
     <!-- 面包屑 -->
     <breadcrumb :breadcrumb-list="breadcrumbList" />
-    
     <!-- search -->
     <el-form class="myForm" :model="form" label-width="80px" label-position="left">
+      <el-form-item label="项目名称:">{{ projectInfo.name }}({{ projectInfo.desc}})</el-form-item>
       <el-form-item label="选择分支:">
         <el-radio-group v-model="form.branchName" @change="onSearch">
           <el-radio label="test" />
@@ -124,15 +130,14 @@
     </div>
     <!-- show -->
     <p class="lastCommit">
-      <span>{{`当前${form.branchName === 'all' ? '所有' :  form.branchName}分支最后一次提交: `}}</span>
-      <time>(2022-01-02)</time>
-      +
-      <span>(提交内容提交内容提交内容提交内容提交内容)</span>
+      <span>{{`当前 ${form.branchName === 'all' ? '所有' :  form.branchName} 分支最后一次提交: `}}</span>
+      <br>
+      <span>{{publishData.gitMessage}}</span>
     </p>
 
     <!-- table -->
     <div class="table">
-      <table-com :table-data="tableData" />
+      <table-com :table-data="publishData.list" />
     </div>
   </div>
 </template>
@@ -151,14 +156,15 @@
       line-height: 36px;
     }
     .myForm {
+      flex: 0;
       .el-form-item {
-        margin-bottom: 0;
+        margin-bottom: 10px;
       }
     }
-    .lastCommit {
-      height: 36px;
-      line-height: 36px;
-    }
+    // .lastCommit {
+    //   height: 36px;
+    //   line-height: 36px;
+    // }
     .table {
       flex: 1;
       overflow: hidden;
